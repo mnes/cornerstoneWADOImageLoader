@@ -158,7 +158,9 @@ function createImage(imageId, pixelData, transferSyntax, options = {}) {
           cornerstone.metaData.get('modalityLutModule', imageId) || {};
         const sopCommonModule =
           cornerstone.metaData.get('sopCommonModule', imageId) || {};
-        const isColorImage = isColorImageFn(imageFrame.photometricInterpretation);
+        const isColorImage = isColorImageFn(
+          imageFrame.photometricInterpretation
+        );
 
         // JPEGBaseline (8 bits) is already returning the pixel data in the right format (rgba)
         // because it's using a canvas to load and decode images.
@@ -281,7 +283,10 @@ function createImage(imageId, pixelData, transferSyntax, options = {}) {
         }
 
         // set the ww/wc to cover the dynamic range of the image if no values are supplied
-        if (image.windowCenter === undefined || image.windowWidth === undefined) {
+        if (
+          image.windowCenter === undefined ||
+          image.windowWidth === undefined
+        ) {
           const maxVoi = image.maxPixelValue * image.slope + image.intercept;
           const minVoi = image.minPixelValue * image.slope + image.intercept;
 

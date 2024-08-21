@@ -39,7 +39,12 @@ function loadImageFromPromise(
           const pixelData = getPixelData(dataSet, frame);
           const transferSyntax = dataSet.string('x00020010');
 
-          imagePromise = createImage(imageId, pixelData, transferSyntax, options);
+          imagePromise = createImage(
+            imageId,
+            pixelData,
+            transferSyntax,
+            options
+          );
         } catch (error) {
           // Reject the error, and the dataSet
           reject({
