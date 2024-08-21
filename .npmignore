@@ -13,6 +13,7 @@ testImages/
 .eslintignore
 .gitignore
 .jsdocrc
+.node-version
 .travis.yml
 changelog.md
 karma.conf.js
