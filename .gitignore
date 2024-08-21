@@ -2,7 +2,7 @@
 node_modules/
 coverage/
 documentation/
-dist/
+# dist/
 
 ## Files
 npm-debug.log
