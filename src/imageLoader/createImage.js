@@ -295,6 +295,7 @@ function createImage(imageId, pixelData, transferSyntax, options = {}) {
         }
         resolve(image);
       } catch (e) {
+        console.error(e);
         reject(e);
       }
     }, reject);
