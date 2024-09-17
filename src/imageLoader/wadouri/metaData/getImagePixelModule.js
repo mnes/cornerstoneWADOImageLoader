@@ -102,9 +102,10 @@ function populateSmallestLargestPixelValues(dataSet, imagePixelModule) {
 }
 
 function getImagePixelModule(dataSet) {
-  let pixelDataVr = undefined;
+  let pixelDataVr;
   const pixelDataElement =
     dataSet.elements.x7fe00010 || dataSet.elements.x7fe00008;
+
   if (pixelDataElement && pixelDataElement.vr) {
     pixelDataVr = pixelDataElement.vr;
   }
@@ -120,7 +121,7 @@ function getImagePixelModule(dataSet) {
     pixelRepresentation: dataSet.uint16('x00280103'),
     planarConfiguration: dataSet.uint16('x00280006'),
     pixelAspectRatio: dataSet.string('x00280034'),
-    pixelDataVr: pixelDataVr,
+    pixelDataVr,
   };
 
   populateSmallestLargestPixelValues(dataSet, imagePixelModule);
