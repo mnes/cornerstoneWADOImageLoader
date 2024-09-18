@@ -28,6 +28,22 @@ function decodeBigEndian(imageFrame, pixelData) {
     }
   } else if (imageFrame.bitsAllocated === 8) {
     imageFrame.pixelData = pixelData;
+
+    // we need to decode big endian if OW
+    if (
+      imageFrame.pixelDataVr &&
+      typeof imageFrame.pixelDataVr === 'string' &&
+      imageFrame.pixelDataVr.toUpperCase() === 'OW'
+    ) {
+      const length = Math.floor(imageFrame.pixelData.length / 2) * 2;
+
+      for (let i = 0; i < length; i += 2) {
+        const temp = imageFrame.pixelData[i];
+
+        imageFrame.pixelData[i] = imageFrame.pixelData[i + 1];
+        imageFrame.pixelData[i + 1] = temp;
+      }
+    }
   }
 
   return imageFrame;

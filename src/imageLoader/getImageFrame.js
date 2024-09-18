@@ -30,6 +30,7 @@ function getImageFrame(imageId) {
       imagePixelModule.greenPaletteColorLookupTableData,
     bluePaletteColorLookupTableData:
       imagePixelModule.bluePaletteColorLookupTableData,
+    pixelDataVr: imagePixelModule.pixelDataVr, // value representation of the pixel data
     pixelData: undefined, // populated later after decoding
   };
 }
