@@ -97,12 +97,24 @@ function handleMessageFromWorker (msg) {
     const start = webWorkers[msg.data.workerIndex].task.start;
 
     const action = msg.data.status === 'success' ? 'resolve' : 'reject';
+
     webWorkers[msg.data.workerIndex].task.deferred[action](msg.data.result);
 
     webWorkers[msg.data.workerIndex].task = undefined;
 
     statistics.numTasksExecuting--;
-    webWorkers[msg.data.workerIndex].status = 'ready';
+
+    /**
+     * Content error: Memory leak
+     *
+     * When taskType = decoded && Status = success
+     * Then terminate current Worker and replace it with new worker
+     * Old Code: webWorkers[msg.data.workerIndex].status = 'ready';
+     */
+    if (msg.data.status === 'success') {
+      webWorkers[msg.data.workerIndex].worker.terminate();
+      spawnNewWebWorker(msg.data.workerIndex);
+    }
     statistics.numTasksCompleted++;
 
     const end = new Date().getTime();
@@ -114,8 +126,27 @@ function handleMessageFromWorker (msg) {
 }
 
 /**
- * Spawns a new web worker
+ * Content error: Memory leak
+ * Spawns a new web worker and replace it in list webWorker
+ *
+ * @author PhongTT6
+ * @Version 1.0
+ * @since 2022/01/10
  */
+function spawnNewWebWorker (index) {
+  const worker = new cornerstoneWADOImageLoaderWebWorker();
+
+  webWorkers[index] = {
+    worker,
+    status: 'initializing'
+  };
+  worker.addEventListener('message', handleMessageFromWorker);
+  worker.postMessage({
+    taskType: 'initialize',
+    workerIndex: index,
+    config
+  });
+}
 function spawnWebWorker () {
   // prevent exceeding maxWebWorkers
   if (webWorkers.length >= config.maxWebWorkers) {
