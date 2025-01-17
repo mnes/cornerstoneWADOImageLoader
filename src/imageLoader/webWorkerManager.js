@@ -50,7 +50,7 @@ function startTaskOnWebWorker () {
 
   // look for a web worker that is ready
   for (let i = 0; i < webWorkers.length; i++) {
-    if (webWorkers[i].status === 'ready') {
+    if (webWorkers[i] && webWorkers[i].status === 'ready') {
       // mark it as busy so tasks are not assigned to it
       webWorkers[i].status = 'busy';
 
