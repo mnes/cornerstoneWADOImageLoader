@@ -34,10 +34,11 @@ function getPixelData (uri, imageId, mediaType = 'application/octet-stream') {
     accept: mediaType
   };
 
-  return new Promise((resolve, reject) => {
-    const loadPromise = xhrRequest(uri, imageId, headers);
+  const xhr = xhrRequest(uri, imageId, headers);
 
-    loadPromise.then(function (imageFrameAsArrayBuffer/* , xhr*/) {
+  const promise = new Promise((resolve, reject) => {
+
+    xhr.promise.then(function (imageFrameAsArrayBuffer/* , xhr*/) {
 
       // request succeeded, Parse the multi-part mime response
       const response = new Uint8Array(imageFrameAsArrayBuffer);
@@ -77,6 +78,11 @@ function getPixelData (uri, imageId, mediaType = 'application/octet-stream') {
       });
     });
   });
+
+  return {
+    promise,
+    cancel: xhr.cancel
+  };
 }
 
 export default getPixelData;

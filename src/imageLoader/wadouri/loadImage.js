@@ -15,14 +15,14 @@ function addDecache (imageLoadObject, imageId) {
   };
 }
 
-function loadImageFromPromise (dataSetPromise, imageId, frame = 0, sharedCacheKey, options, callbacks) {
+function loadImageFromPromise (dataSetObj, imageId, frame = 0, sharedCacheKey, options, callbacks) {
   const start = new Date().getTime();
   const imageLoadObject = {
-    cancelFn: undefined
+    cancel: dataSetObj.cancel
   };
 
   imageLoadObject.promise = new Promise((resolve, reject) => {
-    dataSetPromise.then((dataSet/* , xhr*/) => {
+    dataSetObj.promise.then((dataSet/* , xhr*/) => {
       const pixelData = getPixelData(dataSet, frame);
       const transferSyntax = dataSet.string('x00020010');
       const loadEnd = new Date().getTime();
@@ -95,7 +95,7 @@ function loadImageFromDataSet (dataSet, imageId, frame = 0, sharedCacheKey, opti
 
   return {
     promise,
-    cancelFn: undefined
+    cancel: undefined
   };
 }
 
@@ -127,9 +127,9 @@ function loadImage (imageId, options = {}) {
   }
 
   // load the dataSet via the dataSetCacheManager
-  const dataSetPromise = dataSetCacheManager.load(parsedImageId.url, loader, imageId);
+  const dataSetObj = dataSetCacheManager.load(parsedImageId.url, loader, imageId);
 
-  return loadImageFromPromise(dataSetPromise, imageId, parsedImageId.frame, parsedImageId.url, options);
+  return loadImageFromPromise(dataSetObj, imageId, parsedImageId.frame, parsedImageId.url, options);
 }
 
 export { loadImageFromPromise, getLoaderForScheme, loadImage };

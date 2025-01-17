@@ -5,10 +5,17 @@ function xhrRequest (url, imageId, headers = {}, params = {}) {
   const { cornerstone } = external;
   const options = getOptions();
 
-  // Make the request for the DICOM P10 SOP Instance
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
+  const cancel = function () {
+    if (xhr.readyState < 4) {
+      console.log('xhr aborted');
+      xhr.canceled = true;
+      xhr.abort();
+    }
+  };
 
+  const promise = new Promise((resolve, reject) => {
+    // Make the request for the DICOM P10 SOP Instance
     xhr.open('get', url, true);
     xhr.responseType = 'arraybuffer';
     options.beforeSend(xhr, imageId, headers, params);
@@ -109,6 +116,11 @@ function xhrRequest (url, imageId, headers = {}, params = {}) {
 
     xhr.send();
   });
+
+  return {
+    promise,
+    cancel
+  };
 }
 
 export default xhrRequest;
