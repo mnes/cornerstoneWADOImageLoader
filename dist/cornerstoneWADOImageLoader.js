@@ -74,7 +74,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "d6e8946f07ef565456dc";
+/******/ 	var hotCurrentHash = "cc9fa5bdd8ae392a95b3";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -7081,6 +7081,20 @@ function initialize(configObject) {
   }
 }
 /**
+ * Terminate all idle web workers.
+ */
+
+
+function terminateIdleWorker() {
+  // Terminate all workers except the first created worker
+  for (var i = 1; i < webWorkers.length; i++) {
+    webWorkers[i].worker.removeEventListener('message', handleMessageFromWorker);
+    webWorkers[i].worker.terminate();
+  }
+
+  webWorkers.length = 1;
+}
+/**
  * Terminate all running web workers.
  */
 
@@ -7248,7 +7262,8 @@ function getStatistics() {
   setTaskPriority: setTaskPriority,
   cancelTask: cancelTask,
   webWorkers: webWorkers,
-  terminate: terminate
+  terminate: terminate,
+  terminateIdleWorker: terminateIdleWorker
 });
 
 /***/ }),
