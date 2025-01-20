@@ -193,6 +193,19 @@ function initialize (configObject) {
 }
 
 /**
+ * Terminate all idle web workers.
+ */
+function terminateIdleWorker () {
+  // Terminate all workers except the first created worker
+  for (let i = 1; i < webWorkers.length; i++) {
+    webWorkers[i].worker.removeEventListener('message', handleMessageFromWorker);
+    webWorkers[i].worker.terminate();
+  }
+
+  webWorkers.length = 1;
+}
+
+/**
  * Terminate all running web workers.
  */
 function terminate () {
@@ -358,5 +371,6 @@ export default {
   setTaskPriority,
   cancelTask,
   webWorkers,
-  terminate
+  terminate,
+  terminateIdleWorker
 };
