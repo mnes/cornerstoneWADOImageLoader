@@ -112,6 +112,7 @@ function handleMessageFromWorker (msg) {
      * Old Code: webWorkers[msg.data.workerIndex].status = 'ready';
      */
     if (msg.data.status === 'success') {
+      webWorkers[msg.data.workerIndex].worker.removeEventListener('message', handleMessageFromWorker);
       webWorkers[msg.data.workerIndex].worker.terminate();
       spawnNewWebWorker(msg.data.workerIndex);
     }
